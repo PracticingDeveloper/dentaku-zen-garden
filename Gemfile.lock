@@ -1,0 +1,10 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    dentaku (1.2.6)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  dentaku
