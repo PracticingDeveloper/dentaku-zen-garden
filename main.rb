@@ -1,33 +1,23 @@
-require 'dentaku'
-require 'csv'
+require_relative './project'
 
-class Project
-  def initialize(name, **options)
-    @name     = name
-    @options  = options
-    @template = CSV.new(IO.read("db/#{ name }.csv"), headers: :true).to_a.map(&:to_hash)
-  end
+puts 'Enter project name:'
+puts "  available project templates: #{ Project.available_projects.join(', ') }"
 
-  def materials
-    base_variables = @options.merge(
-      'volume' => 'length * width * height'
-    )
+project_name = $stdin.gets.chomp
 
-    variables = @template.each_with_object(base_variables) do |material, vars|
-      vars[material['name']] = material['formula']
-    end
+project = Project.new(project_name)
 
-    values = Dentaku::Calculator.new.solve!(variables)
-
-    @template.each_with_object([]) do |item, list|
-      list << item.merge('quantity' => values[item['name']])
-    end
-  end
+puts
+puts 'Select options:'
+options = project.variables.each_with_object({}) do |var, opts|
+  print "#{ var }:"
+  opts[var] = $stdin.gets.chomp
 end
 
-calm = Project.new("calm", length: 30, width: 20, height: 5)
+project.select_options(options)
 
-puts "Materials:"
-calm.materials.each do |material|
+puts
+puts 'Materials:'
+project.materials.each do |material|
   puts "#{ material['quantity'].to_i } #{ material['unit'] } - #{ material['name'] }"
 end

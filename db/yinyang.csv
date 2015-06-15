@@ -1,0 +1,5 @@
+name,formula,unit
+1x6 flexible strip,3.1416 * diameter,linear cm
+granite slab,3.1416 * radius^2,sq cm
+sand,cylinder * 0.5,cu cm
+black sand,cylinder * 0.5,cu cm
