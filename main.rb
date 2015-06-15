@@ -21,3 +21,7 @@ puts 'Materials:'
 project.materials.each do |material|
   puts "#{ material['quantity'].to_i } #{ material['unit'] } - #{ material['name'] }"
 end
+
+puts
+puts 'Shipping Weight:'
+puts "  #{ project.shipping_weight } g"

@@ -3,15 +3,15 @@ require 'csv'
 
 class Project
   def self.available_projects
-    Dir['db/*.csv'].map do |filename|
-      filename.scan(%r{db\/(.*)\.csv})
+    Dir['db/projects/*.csv'].map do |filename|
+      filename.scan(%r{db\/projects\/(.*)\.csv})
     end
   end
 
   def initialize(name, **options)
     @name     = name
     @options  = options
-    @template = CSV.new(IO.read("db/#{ name }.csv"), headers: :true).to_a.map(&:to_hash)
+    @template = CSV.new(IO.read("db/projects/#{ name }.csv"), headers: :true).to_a.map(&:to_hash)
   end
 
   def select_options(options)
@@ -56,5 +56,21 @@ class Project
     @template.each_with_object([]) do |item, list|
       list << item.merge('quantity' => values[item['name']])
     end
+  end
+
+  def shipping_weight
+    weight_formulas = csv_data('db/materials.csv').each_with_object({}) do |m, h|
+      h[m['name']] = m['weight']
+    end
+
+    materials.inject(0.0) do |w, m| 
+      w + calculator.evaluate(weight_formulas[m['name']], m)
+    end.ceil
+  end
+
+  private
+
+  def csv_data(path)
+    CSV.new(IO.read(path), headers: :true).to_a.map(&:to_hash)
   end
 end

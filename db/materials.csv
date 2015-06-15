@@ -1,0 +1,6 @@
+name,weight,notes
+1x6 flexible strip,quantity * 6 * 0.200,linear cm * width * thickness * density
+1x6 wood strip,quantity * 0.900 * 6,
+black sand,quantity * 2.000,cu cm * density
+granite slab,quantity * 2 * 2.725,sq cm * thickness * density
+sand,quantity * 2.000,
