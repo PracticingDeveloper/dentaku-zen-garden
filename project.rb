@@ -26,7 +26,7 @@ class Project
     {
       'volume'   => 'length * width * height',
       'cylinder' => '3.1416 * radius^2 * height',
-      'diameter' => 'radius * 2',
+      'radius'   => 'diameter / 2.0'
     }
   end
 
@@ -39,19 +39,36 @@ class Project
 
   def variables
     # perform any global rule variable replacements
-    template_variables.each_with_object([]) do |var, vars|
-      vars.concat Dentaku::Expression.new(global_rules.fetch(var, var)).identifiers
-    end.uniq.sort
+    template_variables.flat_map { |v| replace_with_dependencies(v) }.uniq.sort
+  end
+
+  def replace_with_dependencies(variable, include_transitive: false)
+    # if this is a derived variable, replace it with its dependencies
+    # e.g. cylinder would be replaced by radius and height
+    # radius would further be replaced by diameter
+    dependencies = Dentaku::Expression.new(global_rules.fetch(variable, variable)).identifiers
+    dependencies.unshift(variable) if include_transitive
+    dependencies.uniq.flat_map do |d|
+      if d == variable
+        d
+      else
+        replace_with_dependencies(d, include_transitive: include_transitive)
+      end
+    end
   end
 
   def materials
-    base_variables = @options.merge(global_rules.select { |k, v| template_variables.include?(k) })
-
-    variables = @template.each_with_object(base_variables) do |material, vars|
+    variables = @template.each_with_object(@options) do |material, vars|
       vars[material['name']] = material['formula']
     end
 
-    values = Dentaku::Calculator.new.solve!(variables)
+    dependencies = variables.values.flat_map do |v|
+      replace_with_dependencies(v, include_transitive: true)
+    end.uniq
+
+    rules = global_rules.select { |r, _| dependencies.include? r }
+
+    values = Dentaku::Calculator.new.solve!(variables.merge(rules))
 
     @template.each_with_object([]) do |item, list|
       list << item.merge('quantity' => values[item['name']])
@@ -63,7 +80,7 @@ class Project
       h[m['name']] = m['weight']
     end
 
-    materials.inject(0.0) do |w, m| 
+    materials.inject(0.0) do |w, m|
       w + calculator.evaluate(weight_formulas[m['name']], m)
     end.ceil
   end
