@@ -17,6 +17,3 @@ PLATFORMS
 DEPENDENCIES
   dentaku
   sinatra
-
-BUNDLED WITH
-   1.10.5
