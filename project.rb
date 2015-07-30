@@ -5,7 +5,7 @@ class Project
   def self.available_projects
     Dir['db/projects/*.csv'].map do |filename|
       filename.scan(%r{db\/projects\/(.*)\.csv})
-    end
+    end.flatten
   end
 
   def initialize(name, **options)

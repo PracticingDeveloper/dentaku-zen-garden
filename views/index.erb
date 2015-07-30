@@ -1,0 +1,11 @@
+<h1>Available Projects</h1>
+
+<ul>
+  <% @available_projects.each do |project| %>
+    <li>
+      <a href="/<%= project %>">
+        <%= project %>
+      </a>
+    </li>
+  <% end %>
+</ul>
