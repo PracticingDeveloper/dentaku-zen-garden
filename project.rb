@@ -26,7 +26,8 @@ class Project
     {
       'volume'   => 'length * width * height',
       'cylinder' => '3.1416 * radius^2 * height',
-      'radius'   => 'diameter / 2.0'
+      'radius'   => 'diameter / 2.0',
+      'pi'       => '3.1416'
     }
   end
 
