@@ -1,0 +1,38 @@
+<div class="row">
+  <div class="col-md-4">
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h3 class="panel-title">Zen Garden &mdash; <%= params[:project] %></h3>
+      </div>
+
+      <div class="panel-body">
+        <h3>Materials</h3>
+
+        <table class="table table-bordered table-striped">
+          <thead>
+            <tr>
+              <th>Quantity</th>
+              <th>Unit</th>
+              <th>Name</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <% @project.materials.each do |material| %>
+              <tr>
+                <td><%= material['quantity'].to_i %></td>
+                <td><%= material['unit'] %></td>
+                <td><%= material['name'] %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="panel-footer">
+        <h3>Shipping Weight</h3>
+        <%= @project.shipping_weight %> g
+      </div>
+    </div>
+  </div>
+</div>
