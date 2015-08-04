@@ -1,5 +1,6 @@
 require 'sinatra'
 require_relative './project'
+require "sinatra/reloader" if development?
 
 get '/' do
   @available_projects = Project.available_projects

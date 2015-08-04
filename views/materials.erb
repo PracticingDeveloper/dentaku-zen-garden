@@ -6,6 +6,16 @@
       </div>
 
       <div class="panel-body">
+        <h3>Requirements</h3>
+        <table class="table table-bordered table-striped">
+          <% params['variables'].each do |k,v| %>
+            <tr>
+              <td><strong><%= k %></strong></td>
+              <td><%= v %></td>
+            </tr>
+          <% end %>
+        <table>
+
         <h3>Materials</h3>
 
         <table class="table table-bordered table-striped">
