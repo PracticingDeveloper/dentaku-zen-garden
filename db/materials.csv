@@ -3,4 +3,4 @@ name,weight,notes
 1x6 wood strip,quantity * 6 * 0.900,linear cm * width * thickness * density
 granite slab,quantity * 2 * 2.725,sq cm * thickness * density
 black sand,quantity * 2.000,cu cm * density
-sand,quantity * 2.000,cu cm * density
+white sand,quantity * 2.000,cu cm * density

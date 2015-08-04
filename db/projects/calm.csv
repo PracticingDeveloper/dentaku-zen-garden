@@ -1,4 +1,4 @@
 name,formula,unit
-1cm thick wood strip,2 * length * height + 2 * width * height,sq cm
+1cm thick wood strip,perimeter * height,sq cm
 granite slab,length * width,sq cm
-sand,volume * fill,cu cm
+white sand,volume * fill,cu cm
