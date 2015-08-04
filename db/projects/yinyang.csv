@@ -1,5 +1,5 @@
 name,formula,unit
 1cm thick flexible strip,pi * diameter * height,sq cm
 granite slab,pi * radius^2,sq cm
-sand,cylinder * 0.5 * 0.7,cu cm
-black sand,cylinder * 0.5 * 0.7,cu cm
+sand,cylinder * 0.5 * fill,cu cm
+black sand,cylinder * 0.5 * fill,cu cm

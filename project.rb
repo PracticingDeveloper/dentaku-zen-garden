@@ -29,7 +29,8 @@ class Project
       'volume'   => 'length * width * height',
       'cylinder' => 'pi * radius^2 * height',
       'radius'   => 'diameter / 2.0',
-      'pi'       => '3.1416'
+      'pi'       => '3.1416',
+      'fill'     => '0.7'
     }
   end
 
