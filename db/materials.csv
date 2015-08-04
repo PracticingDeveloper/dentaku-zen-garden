@@ -1,6 +1,6 @@
 name,weight,notes
-1x6 flexible strip,quantity * 6 * 0.200,linear cm * width * thickness * density
-1x6 wood strip,quantity * 6 * 0.900,linear cm * width * thickness * density
+1cm thick flexible strip,quantity * 1 * 0.200,sq cm * thickness * density
+1cm thick wood strip,quantity * 1 * 0.900,sq cm * thickness * density
 granite slab,quantity * 2 * 2.725,sq cm * thickness * density
 black sand,quantity * 2.000,cu cm * density
 white sand,quantity * 2.000,cu cm * density
