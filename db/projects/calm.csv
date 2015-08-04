@@ -1,4 +1,4 @@
 name,formula,unit
 1cm thick wood strip,perimeter * height,sq cm
-granite slab,length * width,sq cm
+granite slab,rect_area,sq cm
 white sand,volume * fill,cu cm

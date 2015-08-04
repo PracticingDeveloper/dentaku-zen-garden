@@ -26,10 +26,12 @@ class Project
 
   def global_rules
     {
-      'volume'   => 'length * width * height',
+      'volume'    => 'rect_area * height',
+      'rect_area' => 'length * width', 
       'perimeter' => '2 * length + 2 * width',
-      'cylinder' => 'pi * radius^2 * height',
+      'cylinder'  => 'circular_area * height',
       'circumference' => 'pi * diameter',
+      'circular_area' => 'pi * radius^2',
       'radius'   => 'diameter / 2.0',
       'pi'       => '3.1416',
       'fill'     => '0.7'
