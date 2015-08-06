@@ -1,8 +1,13 @@
+GIT
+  remote: git://github.com/rubysolo/dentaku.git
+  revision: a1fa1fa421cb5ddeeafa2f6d5c830da186e3618b
+  specs:
+    dentaku (1.2.6)
+
 GEM
   remote: https://rubygems.org/
   specs:
     backports (3.6.5)
-    dentaku (1.2.6)
     multi_json (1.11.1)
     rack (1.6.4)
     rack-protection (1.5.3)
@@ -26,6 +31,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  dentaku
+  dentaku!
   sinatra
   sinatra-contrib

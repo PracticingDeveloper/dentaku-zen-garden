@@ -2,6 +2,7 @@ class Template
   def initialize(data, global_rules)
     @data         = data
     @global_rules = global_rules
+    @calculator   = Dentaku::Calculator.new
   end
 
   def all_rules(options)
@@ -21,13 +22,17 @@ class Template
   def all_variables
     # extract all variables from project material formulas
     @data.each_with_object([]) do |material, vars|
-      vars.concat Dentaku::Expression.new(material['formula']).identifiers
+      vars.concat expression_dependencies(material['formula'])
     end.uniq
   end
 
   def unbound_variables
     # perform any global rule variable replacements
     all_variables.flat_map { |v| replace_with_dependencies(v) }.uniq.sort
+  end
+
+  def expression_dependencies(expression)
+    @calculator.ast(expression).dependencies
   end
 
   private
@@ -42,7 +47,7 @@ class Template
     # if this is a derived variable, replace it with its dependencies
     # e.g. cylinder would be replaced by radius and height
     # radius would further be replaced by diameter
-    dependencies = Dentaku::Expression.new(@global_rules.fetch(variable, variable)).identifiers
+    dependencies = expression_dependencies(@global_rules.fetch(variable, variable))
     dependencies.unshift(variable) if include_transitive
     dependencies.uniq.flat_map do |d|
       if d == variable
