@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
 
-gem 'dentaku'
+gem 'dentaku', github: 'rubysolo/dentaku'
 gem 'sinatra'
 gem 'sinatra-contrib'
