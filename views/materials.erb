@@ -30,7 +30,7 @@
           <tbody>
             <% @project.materials.each do |material| %>
               <tr>
-                <td><%= material['quantity'].to_i %></td>
+                <td class="text-right"><%= material['quantity'].ceil %></td>
                 <td><%= material['unit'] %></td>
                 <td><%= material['name'] %></td>
               </tr>

@@ -1,5 +1,5 @@
 name,formula,unit
-1cm thick flexible strip,circumference * height,sq cm
+1cm thick flexible strip,(circumference * 1.5) * height,sq cm
 granite slab,circular_area,sq cm
 white sand,cylinder * 0.5 * fill,cu cm
 black sand,cylinder * 0.5 * fill,cu cm
