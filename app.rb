@@ -1,3 +1,6 @@
+require "bundler"
+Bundler.require
+
 require 'sinatra'
 require_relative './project'
 require "sinatra/reloader" if development?
