@@ -1,8 +1,8 @@
 GIT
   remote: git://github.com/rubysolo/dentaku.git
-  revision: a1fa1fa421cb5ddeeafa2f6d5c830da186e3618b
+  revision: d698aa82711772d05c9d28a69e9c46c241618379
   specs:
-    dentaku (1.2.6)
+    dentaku (2.0.3)
 
 GEM
   remote: https://rubygems.org/

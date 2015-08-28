@@ -1,5 +1,6 @@
 require 'dentaku'
 require 'csv'
+require 'json'
 
 require_relative "template"
 
@@ -11,17 +12,17 @@ class Project
   end
 
   def initialize(name, **options)
-    @name     = name
-    @options  = options
-    @template = CSV.new(IO.read("db/projects/#{ name }.csv"), headers: :true).to_a.map(&:to_hash)
+    @name       = name
+    @options    = options
+    @template   = CSV.new(IO.read("db/projects/#{ name }.csv"), headers: :true).to_a.map(&:to_hash)
+
+    @variables  = JSON.parse(IO.read("db/metadata.json"))[name]["params"]
   end
+
+  attr_reader :variables
 
   def select_options(options)
     @options = options
-  end
-
-  def calculator
-    @calculator ||= Dentaku::Calculator.new
   end
 
   def global_rules
@@ -38,14 +39,18 @@ class Project
     }
   end
 
-  def variables
-    Template.new(@template, global_rules).unbound_variables
-  end
-
   def materials
-    t = Template.new(@template, global_rules)
+    t = Template.new(@template)
 
-    values = Dentaku::Calculator.new.solve!(t.all_rules(@options))
+    calculator = Dentaku::Calculator.new
+  
+    global_rules.each { |k,v| calculator.store_formula(k,v) }
+
+    @options.each do |k,v|
+      calculator.store_formula(k,v)
+    end
+
+    values = calculator.solve!(t.all_rules)
 
     @template.each_with_object([]) do |item, list|
       list << item.merge('quantity' => values[item['name']])
@@ -53,6 +58,8 @@ class Project
   end
 
   def shipping_weight
+    calculator = Dentaku::Calculator.new
+
     weight_formulas = csv_data('db/materials.csv').each_with_object({}) do |m, h|
       h[m['name']] = m['weight']
     end
