@@ -22,7 +22,7 @@ class Project
   attr_reader :variables
 
   def select_options(options)
-    @options = options
+    @options = Hash[options.map { |k,v| [k,Dentaku(v)] }]
   end
 
   def global_rules
@@ -46,14 +46,13 @@ class Project
   
     global_rules.each { |k,v| calculator.store_formula(k,v) }
 
-    @options.each do |k,v|
-      calculator.store_formula(k,v)
+    quantities = {}
+    t.all_rules.each do |k,v|
+      quantities[k] = calculator.evaluate(v, @options)
     end
 
-    values = calculator.solve!(t.all_rules)
-
     @template.each_with_object([]) do |item, list|
-      list << item.merge('quantity' => values[item['name']])
+      list << item.merge('quantity' => quantities[item['name']])
     end
   end
 
