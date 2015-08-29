@@ -30,10 +30,10 @@ class Project
   
     helper_formulas.each { |k,v| calculator.store_formula(k,v) }
     
-    @template.each_with_object([]) do |material, list|
+    @template.map do |material|
       amt = calculator.evaluate(material['formula'], @options)
 
-      list << material.to_hash.merge('quantity' => amt)
+      material.to_hash.merge('quantity' => amt)
     end
   end
 
