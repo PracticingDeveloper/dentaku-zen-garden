@@ -13,8 +13,7 @@ class Project
     @name       = name
     @options    = options
     @variables  = JSON.parse(IO.read("db/metadata.json"))[name]["params"]
-    @template   = CSV.new(File.read("db/projects/#{ name }.csv"), headers: :true)
-                     .to_a.map(&:to_hash)
+    @template   = csv_data("db/projects/#{ name }.csv")
   end
 
   attr_reader :variables
@@ -64,6 +63,6 @@ class Project
   private
 
   def csv_data(path)
-    CSV.new(IO.read(path), headers: :true).to_a.map(&:to_hash)
+    CSV.new(File.read(path), headers: :true).to_a.map(&:to_hash)
   end
 end
