@@ -15,7 +15,6 @@ get '/:project' do
 end
 
 post '/:project' do
-  @project = Project.new(params[:project])
-  @project.select_options(params[:variables])
+  @project = Project.new(params[:project], params[:variables])
   erb :materials, layout: :app
 end

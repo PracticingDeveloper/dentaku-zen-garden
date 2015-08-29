@@ -9,18 +9,14 @@ class Project
     }.flatten
   end
 
-  def initialize(name, **options)
+  def initialize(name, options={})
     @name       = name
-    @options    = options
     @variables  = JSON.parse(IO.read("db/metadata.json"))[name]["params"]
+    @options    = Hash[options.map { |k,v| [k,Dentaku(v)] }]
     @template   = csv_data("db/projects/#{ name }.csv")
   end
 
   attr_reader :variables
-
-  def select_options(options)
-    @options = Hash[options.map { |k,v| [k,Dentaku(v)] }]
-  end
 
   def helper_formulas
     {
