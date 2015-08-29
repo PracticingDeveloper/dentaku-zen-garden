@@ -44,17 +44,19 @@ class Project
     @template.each_with_object([]) do |material, list|
       amt = calculator.evaluate(material['formula'], @options)
 
-      list << material.merge('quantity' => amt)
+      list << material.to_hash.merge('quantity' => amt)
     end
   end
 
   def shipping_weight
     calculator = Dentaku::Calculator.new
 
+    # Build up a hash of weight formulas, keyed by material name
     weight_formulas = csv_data('db/materials.csv').each_with_object({}) do |e, h|
       h[e['name']] = e['weight']
     end
 
+    # Sum up weights for all materials in project based on quantity
     materials.reduce(0.0) { |s, e|
       s + calculator.evaluate(weight_formulas[e['name']], e)
     }.ceil
@@ -63,6 +65,6 @@ class Project
   private
 
   def csv_data(path)
-    CSV.new(File.read(path), headers: :true).to_a.map(&:to_hash)
+    CSV.read(path, :headers => :true)
   end
 end
