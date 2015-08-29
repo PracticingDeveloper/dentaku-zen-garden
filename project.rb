@@ -11,7 +11,7 @@ class Project
 
   def initialize(name, options={})
     @name       = name
-    @variables  = JSON.parse(IO.read("db/metadata.json"))[name]["params"]
+    @variables  = JSON.parse(File.read("db/metadata.json"))[name]["params"]
     @options    = Hash[options.map { |k,v| [k,Dentaku(v)] }]
     @template   = csv_data("db/projects/#{ name }.csv")
   end
