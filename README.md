@@ -40,9 +40,12 @@ weight.
 
 ## Exploring
 
-All the data about projects and materials is stored in the `db` directory.  To
-define a new project, create a new CSV file in `db/projects` with one row per
-material component of your project.
+All the data about projects and materials is stored in the `db` directory.  
+
+To define a new project, create a new CSV file in `db/projects` with one row per
+material component of your project, then add an entry to `db/metadata.json`
+
+To redefine or add new helper formulas, edit the `db/common_formulas.csv` file.
 
 All of the project calculations are performed in `project.rb`.
 
