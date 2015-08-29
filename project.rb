@@ -2,21 +2,19 @@ require 'dentaku'
 require 'csv'
 require 'json'
 
-require_relative "template"
-
 class Project
   def self.available_projects
-    Dir['db/projects/*.csv'].map do |filename|
+    Dir['db/projects/*.csv'].map { |filename|
       filename.scan(%r{db\/projects\/(.*)\.csv})
-    end.flatten
+    }.flatten
   end
 
   def initialize(name, **options)
     @name       = name
     @options    = options
-    @template   = CSV.new(IO.read("db/projects/#{ name }.csv"), headers: :true).to_a.map(&:to_hash)
-
     @variables  = JSON.parse(IO.read("db/metadata.json"))[name]["params"]
+    @template   = CSV.new(File.read("db/projects/#{ name }.csv"), headers: :true)
+                     .to_a.map(&:to_hash)
   end
 
   attr_reader :variables
@@ -25,7 +23,7 @@ class Project
     @options = Hash[options.map { |k,v| [k,Dentaku(v)] }]
   end
 
-  def global_rules
+  def helper_formulas
     {
       'box_volume'       => 'rect_area * height',
       'rect_area'        => 'length * width',
@@ -40,32 +38,27 @@ class Project
   end
 
   def materials
-    t = Template.new(@template)
-
     calculator = Dentaku::Calculator.new
   
-    global_rules.each { |k,v| calculator.store_formula(k,v) }
+    helper_formulas.each { |k,v| calculator.store_formula(k,v) }
+    
+    @template.each_with_object([]) do |material, list|
+      amt = calculator.evaluate(material['formula'], @options)
 
-    quantities = {}
-    t.all_rules.each do |k,v|
-      quantities[k] = calculator.evaluate(v, @options)
-    end
-
-    @template.each_with_object([]) do |item, list|
-      list << item.merge('quantity' => quantities[item['name']])
+      list << material.merge('quantity' => amt)
     end
   end
 
   def shipping_weight
     calculator = Dentaku::Calculator.new
 
-    weight_formulas = csv_data('db/materials.csv').each_with_object({}) do |m, h|
-      h[m['name']] = m['weight']
+    weight_formulas = csv_data('db/materials.csv').each_with_object({}) do |e, h|
+      h[e['name']] = e['weight']
     end
 
-    materials.inject(0.0) do |w, m|
-      w + calculator.evaluate(weight_formulas[m['name']], m)
-    end.ceil
+    materials.reduce(0.0) { |s, e|
+      s + calculator.evaluate(weight_formulas[e['name']], e)
+    }.ceil
   end
 
   private
