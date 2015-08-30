@@ -20,7 +20,7 @@ class Project
 
   attr_reader :variables
 
-  def helper_formulas
+  def common_formulas
     formulas = csv_data("db/common_formulas.csv")
                  .map { |e| [e['formula_name'], e['definition']] }
 
@@ -30,12 +30,12 @@ class Project
   def materials
     calculator = Dentaku::Calculator.new
   
-    helper_formulas.each { |k,v| calculator.store_formula(k,v) }
+    common_formulas.each { |k,v| calculator.store_formula(k,v) }
     
     @template.map do |material|
       amt = calculator.evaluate(material['formula'], @options)
 
-      material.to_hash.merge('quantity' => amt)
+      material.merge('quantity' => amt)
     end
   end
 
@@ -56,6 +56,6 @@ class Project
   private
 
   def csv_data(path)
-    CSV.read(path, :headers => :true)
+    CSV.read(path, :headers => :true).map(&:to_hash)
   end
 end
