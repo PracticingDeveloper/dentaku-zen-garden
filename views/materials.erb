@@ -28,7 +28,7 @@
           </thead>
 
           <tbody>
-            <% @project.materials.each do |material| %>
+            <% @calculator.materials.each do |material| %>
               <tr>
                 <td class="text-right"><%= material['quantity'].ceil %></td>
                 <td><%= material['unit'] %></td>
@@ -41,7 +41,7 @@
 
       <div class="panel-footer">
         <h3>Shipping Weight</h3>
-        <%= @project.shipping_weight %> g
+        <%= @calculator.shipping_weight %> g
       </div>
     </div>
   </div>

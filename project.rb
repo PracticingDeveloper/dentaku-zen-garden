@@ -3,63 +3,38 @@ require 'dentaku'
 require 'csv'
 require 'json'
 
-class Project
-  def self.available_projects
+class << (Project = Object.new)
+  def available_projects
     metadata.keys
   end
 
-  def self.variables(project)
+  def variables(project)
     metadata[project]["params"]
   end
 
-  def self.metadata
-    JSON.parse(File.read("db/metadata.json"))
-  end
-
-  def initialize(name, params={})
-    @name       = name
-    @params     = Hash[params.map { |k,v| [k,Dentaku(v)] }]
-    @template   = csv_data("db/projects/#{ name }.csv")
-  end
-
-  attr_reader :variables
-
   def common_formulas
-    formulas = csv_data("db/common_formulas.csv")
-                 .map { |e| [e['formula_name'], e['definition']] }
-
-    Hash[formulas]
+    csv_hash("db/common_formulas.csv", "formula_name", "definition")
   end
 
-  def materials
-    calculator = Dentaku::Calculator.new
-  
-    common_formulas.each { |k,v| calculator.store_formula(k,v) }
-    
-    @template.map do |material|
-      amt = calculator.evaluate(material['formula'], @params)
-
-      material.merge('quantity' => amt)
-    end
+  def weight_formulas
+    csv_hash('db/materials.csv', 'name', 'weight')
   end
 
-  def shipping_weight
-    calculator = Dentaku::Calculator.new
-
-    # Build up a hash of weight formulas, keyed by material name
-    weight_formulas = Hash[ 
-      csv_data('db/materials.csv').map { |e| [e['name'], e['weight']] } 
-    ]
-
-    # Sum up weights for all materials in project based on quantity
-    materials.reduce(0.0) { |s, e| 
-      s + calculator.evaluate(weight_formulas[e['name']], e)
-    }.ceil
+  def quantity_formulas(name)
+    csv_table("db/projects/#{ name }.csv")
   end
 
   private
 
-  def csv_data(path)
+  def metadata
+    JSON.parse(File.read("db/metadata.json"))
+  end
+
+  def csv_table(path)
     CSV.read(path, :headers => :true).map(&:to_hash)
+  end
+
+  def csv_hash(path, key, value)
+    Hash[csv_table(path).map { |e| [e[key], e[value]] }]
   end
 end

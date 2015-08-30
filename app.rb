@@ -3,6 +3,7 @@ Bundler.require
 
 require 'sinatra'
 require_relative 'project'
+require_relative 'calculator'
 
 get '/' do
   @available_projects = Project.available_projects
@@ -14,6 +15,6 @@ get '/:project' do
 end
 
 post '/:project' do
-  @project = Project.new(params[:project], params[:variables])
+  @calculator = Calculator.new(params[:project], params[:variables])
   erb :materials, layout: :app
 end
