@@ -1,3 +1,5 @@
+require 'dentaku'
+
 require_relative "project"
 
 class Calculator

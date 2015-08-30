@@ -1,5 +1,3 @@
-require 'dentaku'
-
 require 'csv'
 require 'json'
 
