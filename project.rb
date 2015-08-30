@@ -41,12 +41,12 @@ class Project
     calculator = Dentaku::Calculator.new
 
     # Build up a hash of weight formulas, keyed by material name
-    weight_formulas = csv_data('db/materials.csv').each_with_object({}) do |e, h|
-      h[e['name']] = e['weight']
-    end
-
+    weight_formulas = Hash[ 
+      csv_data('db/materials.csv').map { |e| [e['name'], e['weight']] } 
+    ]
+  
     # Sum up weights for all materials in project based on quantity
-    materials.reduce(0.0) { |s, e|
+    materials.reduce(0.0) { |s, e| 
       s + calculator.evaluate(weight_formulas[e['name']], e)
     }.ceil
   end
