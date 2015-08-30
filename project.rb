@@ -4,12 +4,16 @@ require 'json'
 
 class Project
   def self.available_projects
-    JSON.parse(File.read("db/metadata.json")).keys
+    metadata.keys
+  end
+
+  def self.metadata
+    JSON.parse(File.read("db/metadata.json"))
   end
 
   def initialize(name, options={})
     @name       = name
-    @variables  = JSON.parse(File.read("db/metadata.json"))[name]["params"]
+    @variables  = self.class.metadata[name]["params"]
     @options    = Hash[options.map { |k,v| [k,Dentaku(v)] }]
     @template   = csv_data("db/projects/#{ name }.csv")
   end
