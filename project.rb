@@ -4,9 +4,7 @@ require 'json'
 
 class Project
   def self.available_projects
-    Dir['db/projects/*.csv'].map { |filename|
-      filename.scan(%r{db\/projects\/(.*)\.csv})
-    }.flatten
+    JSON.parse(File.read("db/metadata.json")).keys
   end
 
   def initialize(name, options={})
@@ -44,7 +42,7 @@ class Project
     weight_formulas = Hash[ 
       csv_data('db/materials.csv').map { |e| [e['name'], e['weight']] } 
     ]
-  
+
     # Sum up weights for all materials in project based on quantity
     materials.reduce(0.0) { |s, e| 
       s + calculator.evaluate(weight_formulas[e['name']], e)
