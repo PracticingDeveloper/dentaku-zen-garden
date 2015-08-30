@@ -7,7 +7,7 @@
       <div class="panel-body">
         <form method="post">
           <input type="hidden" name="project" value="<%= params[:project] %>">
-          <% @project.variables.each do |variable| %>
+          <% Project.variables(params[:project]).each do |variable| %>
             <div class="form-group">
               <label for="<%= variable %>"><%= variable %></label>
               <input type="text" class="form-control" id="<%= variable %>" name="variables[<%= variable %>]">

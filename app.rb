@@ -10,7 +10,6 @@ get '/' do
 end
 
 get '/:project' do
-  @project = Project.new(params[:project])
   erb :project, layout: :app
 end
 

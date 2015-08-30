@@ -1,4 +1,5 @@
 require 'dentaku'
+
 require 'csv'
 require 'json'
 
@@ -7,14 +8,17 @@ class Project
     metadata.keys
   end
 
+  def self.variables(project)
+    metadata[project]["params"]
+  end
+
   def self.metadata
     JSON.parse(File.read("db/metadata.json"))
   end
 
-  def initialize(name, options={})
+  def initialize(name, params={})
     @name       = name
-    @variables  = self.class.metadata[name]["params"]
-    @options    = Hash[options.map { |k,v| [k,Dentaku(v)] }]
+    @params     = Hash[params.map { |k,v| [k,Dentaku(v)] }]
     @template   = csv_data("db/projects/#{ name }.csv")
   end
 
@@ -33,7 +37,7 @@ class Project
     common_formulas.each { |k,v| calculator.store_formula(k,v) }
     
     @template.map do |material|
-      amt = calculator.evaluate(material['formula'], @options)
+      amt = calculator.evaluate(material['formula'], @params)
 
       material.merge('quantity' => amt)
     end
