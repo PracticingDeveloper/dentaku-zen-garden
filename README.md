@@ -47,7 +47,8 @@ material component of your project, then add an entry to `db/metadata.json`
 
 To redefine or add new helper formulas, edit the `db/common_formulas.csv` file.
 
-All of the project calculations are performed in `project.rb`.
+All calculations are performed in `calculator.rb`. Metadata and formulas are 
+loaded via the helper functions in `project.rb`.
 
 The web UI (in Sinatra) is implemented in `app.rb` and the view templates are in
 `views`.
